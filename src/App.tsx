@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { UserInfo } from './UserInfo';
-import { getCookie, setCookie } from './Cookies';
+import { getCookie, setCookie, removeCookie} from './Cookies';
 
 function App() {
   const [isMake, setIsMake] = useState(false);
@@ -55,6 +55,13 @@ function App() {
   }
   const deleteToken = () => {
     setIsDelete(!isDelete);
+    try {
+      removeCookie("token");
+    } catch (error) {
+      alert("쿠키 삭제 실패")
+    } finally{
+      setIsDelete(!isDelete);
+    }
   }
   const isAdminHandler = () => {
     setIsAdmin(true)
