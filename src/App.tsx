@@ -28,18 +28,30 @@ function App() {
   const authToken = async () => {
     let token = getCookie("token");
     setIsAuth(!isAuth);
-    await axios({
-      url: 'http://localhost:3000/auth/check',
-      method: 'post',
-      headers: {
-        authorization: token
+    try {
+      await axios({
+        url: 'http://localhost:3000/auth/check',
+        method: 'post',
+        headers: {
+          authorization: token
+        }
+      }).then((res:AxiosResponse<UserInfo>)=>{
+        const userInfo = res.data.isAdmin;
+        console.log(userInfo);
+        userInfo ? alert("관리자입니다") : alert("관리자가 아닙니다");
+      })
+    } catch (error) {
+      if(axios.isAxiosError(error)){
+        if(error.response?.status === 401){
+          alert("토큰이 존재하지 않습니다");
+        } else if (error.response?.status === 419){
+          alert("토큰이 만료되었습니다");
+        }
       }
-    }).then((res:AxiosResponse<UserInfo>)=>{
-      const userInfo = res.data.isAdmin;
-      console.log(userInfo);
-      userInfo ? alert("관리자입니다") : alert("관리자가 아닙니다");
+    } finally{
       setIsAuth(false);
-    })
+    }
+
   }
   const deleteToken = () => {
     setIsDelete(!isDelete);
