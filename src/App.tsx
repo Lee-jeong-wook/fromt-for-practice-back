@@ -21,7 +21,8 @@ function App() {
     }).then((res:AxiosResponse)=>{
       console.log(res);
       const JWTtoken = res.data.token;
-      setCookie("token", JWTtoken);
+      setCookie("refreshToken", JWTtoken[0]);
+      setCookie("accessToken", JWTtoken[0]);
       setIsMake(false);
     })
   }
